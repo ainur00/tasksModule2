@@ -1,4 +1,4 @@
-// run-report https://contest.yandex.ru/contest/41792/run-report/75264018/
+// run-report https://contest.yandex.ru/contest/41792/run-report/75301691/
 
 /*
 В супермаркете решили оптимизировать показ рекламы. 
@@ -63,9 +63,11 @@ int GetAdImpressionMinCount(std::vector<Buyer>& buyers) {
 	HeapSort(buyers, CompareByLeavingTime);
 	// по условию задачи если есть хоть 1 покупатель, значит ему нужно показать минимум 2 рекламы, значит моменты времени {buyers[0].leavingTime} и {buyers[0].leavingTime - 1} существуют.
 	std::queue<int> lastTwoAdTime;
+	// сразу добавим количество реклам 2 и время этих реклам
 	lastTwoAdTime.push(buyers[0].leavingTime - 1);
 	lastTwoAdTime.push(buyers[0].leavingTime);
 	int adCount = 2;
+	// рассматриваем случаи: если обе последние рекламы были показаны после прихода и до ухода i-го покупателя, только последняя попала в этот промежуток, ни одна из этих реклам не попала в этот промежуток
 	for (int i = 1; i < buyers.size(); ++i) {
 		if ((lastTwoAdTime.back() <= buyers[i].leavingTime && lastTwoAdTime.back() >= buyers[i].comingTime) &&
 			(lastTwoAdTime.front() <= buyers[i].leavingTime && lastTwoAdTime.front() >= buyers[i].comingTime))
