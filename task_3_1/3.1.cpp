@@ -1,4 +1,4 @@
-// run-report https://contest.yandex.ru/contest/41792/run-report/75278258/
+// run-report https://contest.yandex.ru/contest/41792/run-report/75301739/
 
 /*
 Даны неотрицательные целые числа n, k и массив целых чисел из диапазона [0..109] размера n.
@@ -64,4 +64,7 @@ int main() {
 	int kStat = GetKStat(arr, arrSize, k);
 
 	std::cout << kStat;
+
+	delete[] arr;
 }
+
