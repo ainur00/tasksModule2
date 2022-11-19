@@ -1,11 +1,11 @@
-// run-report https://contest.yandex.ru/contest/41792/run-report/75265764/
+// run-report https://contest.yandex.ru/contest/41792/run-report/75301507/
 
 /*
-Дана последовательность целых чисел из диапазона (-1000000000 .. 1000000000). 
-Длина последовательности не больше 1000000. Числа записаны по одному в строке. 
-Количество чисел не указано. 
-Пусть количество элементов n, и числа записаны в массиве a = a[i]: i из [0..n-1]. 
-Требуется напечатать количество таких пар индексов (i,j) из [0..n-1], что (i < j и a[i] > a[j]). 
+Дана последовательность целых чисел из диапазона (-1000000000 .. 1000000000).
+Длина последовательности не больше 1000000. Числа записаны по одному в строке.
+Количество чисел не указано.
+Пусть количество элементов n, и числа записаны в массиве a = a[i]: i из [0..n-1].
+Требуется напечатать количество таких пар индексов (i,j) из [0..n-1], что (i < j и a[i] > a[j]).
 Указание: количество инверсий может быть больше 4*1000000000 - используйте int64_t.
 */
 
@@ -14,42 +14,42 @@
 #include <cstring>
 #include <cstdint>
 
-void Merge(std::vector<int>& v, int l, int m, int r, std::int64_t& inversionCount) {
-    std::vector<int> result(r - l);
-    int i = l;
-    int j = m;
-    while (i < m && j < r) {
-        if (!(v[j] < v[i])) {
-            result[i - l + j - m] = v[i];
+void Merge(std::vector<int>& arr, int leftLimit, int median, int rightLimit, std::int64_t& inversionCount) {
+    std::vector<int> result(rightLimit - leftLimit);
+    int i = leftLimit;
+    int j = median;
+    while (i < median && j < rightLimit) {
+        if (!(arr[j] < arr[i])) {
+            result[i - leftLimit + j - median] = arr[i];
             ++i;
         }
         else {
-            result[i - l + j - m] = v[j];
+            result[i - leftLimit + j - median] = arr[j];
             ++j;
             // прибавляем количество инверсий, так как здесь v[j] < v[i] и i < j.
-            inversionCount += m - i;
+            inversionCount += median - i;
         }
     }
-    for (; i < m; ++i)
-        result[i - l + j - m] = v[i];
-    for (; j < r; ++j)
-        result[j - l] = v[j];
+    for (; i < median; ++i)
+        result[i - leftLimit + j - median] = arr[i];
+    for (; j < rightLimit; ++j)
+        result[j - leftLimit] = arr[j];
     for (int k = 0; k < result.size(); ++k)
-        v[l + k] = result[k];
+        arr[leftLimit + k] = result[k];
 }
 
 
-void MergeSort(std::vector<int>& v, int l, int r, std::int64_t& inversionCount) {
-    if (r - l <= 1)
+void MergeSort(std::vector<int>& arr, int leftLimit, int rightLimit, std::int64_t& inversionCount) {
+    if (rightLimit - leftLimit <= 1)
         return;
-    int med = (r + l) / 2;
-    MergeSort(v, l, med, inversionCount);
-    MergeSort(v, med, r, inversionCount);
-    Merge(v, l, med, r, inversionCount);
+    int med = (rightLimit + leftLimit) / 2;
+    MergeSort(arr, leftLimit, med, inversionCount);
+    MergeSort(arr, med, rightLimit, inversionCount);
+    Merge(arr, leftLimit, med, rightLimit, inversionCount);
 }
 
-void MergeSort(std::vector<int>& v, std::int64_t& inversionCount) {
-    MergeSort(v, 0, v.size(), inversionCount);
+void MergeSort(std::vector<int>& arr, std::int64_t& inversionCount) {
+    MergeSort(arr, 0, arr.size(), inversionCount);
 }
 
 
