@@ -62,3 +62,4 @@ int main() {
 	for (int i = 0; i < boxCount; ++i)
 		std::cout << boxes[i].index << std::endl;
 }
+
