@@ -107,3 +107,4 @@ int main() {
 
 	std::cout << adImpressionMinCount;
 }
+
