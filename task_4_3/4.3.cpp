@@ -70,3 +70,4 @@ int main() {
 
     std::cout << inversionCount;
 }
+
