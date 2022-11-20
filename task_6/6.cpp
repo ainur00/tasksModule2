@@ -1,4 +1,4 @@
-// run-report https://contest.yandex.ru/contest/42399/run-report/75301877/
+// run-report https://contest.yandex.ru/contest/42399/run-report/75518483/
 
 /*
 Дан массив целых чисел в диапазоне [0..109]. 
@@ -22,11 +22,10 @@ struct HalfInterval {
 	HalfInterval(int leftL, int rightL) {
 		leftLimit = leftL;
 		rightLimit = rightL;
-		elementCountInHalfInterval = rightL - leftL;
 	}
 	int leftLimit;
 	int rightLimit;
-	int elementCountInHalfInterval;
+	int ElementsCountInHalfInterval() { return rightLimit - leftLimit; }
 };
 
 int GetMidNumIndex(unsigned int* arr, int num1Index, int num2Index, int num3Index) {
@@ -86,21 +85,18 @@ void Sort(unsigned int* arr, unsigned int arrSize) {
 	HalfInterval arrIndexes(leftLimit, rightLimit);
 	quickSortParameters.push(arrIndexes);
 	while (!quickSortParameters.empty()) {
-		HalfInterval anotherHalfInterval(quickSortParameters.top().leftLimit, quickSortParameters.top().rightLimit);
+		HalfInterval anotherHalfInterval = quickSortParameters.top();
 		quickSortParameters.pop();
-		if (anotherHalfInterval.elementCountInHalfInterval <= 1)
+		if (anotherHalfInterval.ElementsCountInHalfInterval() <= 1)
 			continue;
-		else if (anotherHalfInterval.elementCountInHalfInterval <= 125)
-		{
+		if (anotherHalfInterval.ElementsCountInHalfInterval() <= 125) {
 			// на маленьких размерах сортируем с помощью InsertionSort
 			InsertionSort(arr, anotherHalfInterval);
 			continue;
 		}
 		int pivotPosition = Partition(arr, anotherHalfInterval);
-		HalfInterval leftHalfInterval(anotherHalfInterval.leftLimit, pivotPosition);
-		quickSortParameters.push(leftHalfInterval);
-		HalfInterval rightHalfInterval(pivotPosition + 1, anotherHalfInterval.rightLimit);
-		quickSortParameters.push(rightHalfInterval);
+		quickSortParameters.push({anotherHalfInterval.leftLimit, pivotPosition});
+		quickSortParameters.push({pivotPosition + 1, anotherHalfInterval.rightLimit});
 	}
 }
 
