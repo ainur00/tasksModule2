@@ -1,13 +1,13 @@
-// run-report https://contest.yandex.ru/contest/41792/run-report/75301691/
+// run-report https://contest.yandex.ru/contest/41792/run-report/75516694/
 
 /*
-В супермаркете решили оптимизировать показ рекламы. 
-Известно расписание прихода и ухода покупателей (два целых числа). 
-Каждому покупателю необходимо показать минимум 2 рекламы. 
-Рекламу можно транслировать только в целочисленные моменты времени. 
-Покупатель может видеть рекламу от момента прихода до момента ухода из магазина. 
-В каждый момент времени может показываться только одна реклама. 
-Считается, что реклама показывается мгновенно. 
+В супермаркете решили оптимизировать показ рекламы.
+Известно расписание прихода и ухода покупателей (два целых числа).
+Каждому покупателю необходимо показать минимум 2 рекламы.
+Рекламу можно транслировать только в целочисленные моменты времени.
+Покупатель может видеть рекламу от момента прихода до момента ухода из магазина.
+В каждый момент времени может показываться только одна реклама.
+Считается, что реклама показывается мгновенно.
 Если реклама показывается в момент ухода или прихода, то считается, что посетитель успел её посмотреть.
 Требуется определить минимальное число показов рекламы.
 */
@@ -69,15 +69,11 @@ int GetAdImpressionMinCount(std::vector<Buyer>& buyers) {
 	int adCount = 2;
 	// рассматриваем случаи: если обе последние рекламы были показаны после прихода и до ухода i-го покупателя, только последняя попала в этот промежуток, ни одна из этих реклам не попала в этот промежуток
 	for (int i = 1; i < buyers.size(); ++i) {
-		if ((lastTwoAdTime.back() <= buyers[i].leavingTime && lastTwoAdTime.back() >= buyers[i].comingTime) &&
-			(lastTwoAdTime.front() <= buyers[i].leavingTime && lastTwoAdTime.front() >= buyers[i].comingTime))
+		if ((lastTwoAdTime.back() >= buyers[i].comingTime) && (lastTwoAdTime.front() >= buyers[i].comingTime))
 			continue;
-		else if (lastTwoAdTime.back() <= buyers[i].leavingTime && lastTwoAdTime.back() >= buyers[i].comingTime) {
+		else if (lastTwoAdTime.back() >= buyers[i].comingTime) {
 			lastTwoAdTime.pop();
-			if (buyers[i].leavingTime == lastTwoAdTime.front())
-				lastTwoAdTime.push(buyers[i].leavingTime - 1);
-			else
-				lastTwoAdTime.push(buyers[i].leavingTime);
+			lastTwoAdTime.push(buyers[i].leavingTime);
 			adCount++;
 		}
 		else {
@@ -95,16 +91,11 @@ int main() {
 	int buyerCount = 0;
 	std::cin >> buyerCount;
 	std::vector<Buyer> buyers(buyerCount);
-	for (int i = 0; i < buyerCount; ++i) {
-		int iBuyerComingTime = 0;
-		int iBuyerLeavingTime = 0;
-		std::cin >> iBuyerComingTime >> iBuyerLeavingTime;
-		buyers[i].comingTime = iBuyerComingTime;
-		buyers[i].leavingTime = iBuyerLeavingTime;
-	}
+	for (int i = 0; i < buyerCount; ++i)
+		std::cin >> buyers[i].comingTime >> buyers[i].leavingTime;
 
-	int adImpressionMinCount = GetAdImpressionMinCount(buyers);
+	std::cout << GetAdImpressionMinCount(buyers);
 
-	std::cout << adImpressionMinCount;
+	return 0;
 }
 
